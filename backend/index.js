@@ -38,21 +38,16 @@ app.get("/api/notes", (request, response) => {
 });
 
 app.get("/api/notes/:id", (request, response) => {
-  const id = JSON.parse(request.params.id);
-  const note = notes.find((note) => {
-    return note.id === id;
-  });
-  if (note) {
-    response.json(note);
-  } else {
-    response.status(404).end(`cannot GET /api/notes/${id}`);
-  }
-});
-
-app.delete("/api/notes/:id", (request, response) => {
   Note.findById(request.params.id).then((note) => {
     response.json(note);
   });
+});
+
+app.delete("/api/notes/:id", (request, response) => {
+  const id = JSON.parse(request.params.id);
+  notes = notes.filter((note) => note.id !== id);
+
+  response.status(204).end(`content with id ${id} deleted`);
 });
 
 app.post("/api/notes", (request, response) => {
